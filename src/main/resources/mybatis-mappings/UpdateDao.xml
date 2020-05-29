@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.dyupdate.dao.UpdateDao">
+<!--    <resultMap id="resultMap" type="Update">-->
+<!--        <id column="id" property="id" />-->
+<!--        <result column="game_id" property="gameId" />-->
+<!--        <result column="platform" property="platform" />-->
+<!--        <result column="channel_id" property="channelId" />-->
+<!--        <result column="force_update_version" property="forceUpdateVersion" />-->
+<!--        <result column="url" property="url" />-->
+<!--        <result column="full_update" property="fullUpdate" />-->
+<!--        <result column="update_version" property="updateVersion" />-->
+<!--        <result column="update_time" property="updateTime" />-->
+<!--    </resultMap>-->
+
+    <select id="getUpdateDetail" resultType="com.example.dyupdate.entity.Update">
+        select * from dy_update where game_id = #{gameId} and channel_id = #{channelId} and platform = #{platform}
+    </select>
+
+</mapper>
