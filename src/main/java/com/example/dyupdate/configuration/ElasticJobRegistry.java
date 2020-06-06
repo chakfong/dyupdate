@@ -6,10 +6,9 @@ import com.dangdang.ddframe.job.lite.api.JobScheduler;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 import com.example.dyupdate.annotation.ElasticJob;
-import com.example.dyupdate.schedule.TestTask;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
+@Slf4j
 public class ElasticJobRegistry implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
@@ -39,13 +39,12 @@ public class ElasticJobRegistry implements ApplicationListener<ContextRefreshedE
             ElasticJob annotation = AnnotationUtils.findAnnotation(targetClass, ElasticJob.class);
 
             if (annotation != null) {
-                System.out.println("ElasticJob's cron: " + annotation.cron());
+                log.info("ElasticJob's cron: " + annotation.cron());
                 // 定义作业核心配置
-                JobCoreConfiguration simpleCoreConfig = JobCoreConfiguration.newBuilder("demoSimpleJob", annotation.cron(), 2).build();
+                JobCoreConfiguration simpleCoreConfig = JobCoreConfiguration.newBuilder("demo", annotation.cron(), 1).build();
                 // 定义SIMPLE类型配置
                 SimpleJobConfiguration simpleJobConfig = new SimpleJobConfiguration(simpleCoreConfig, targetClass.getCanonicalName());
                 // 定义Lite作业根配置
-                System.out.println(simpleJobConfig.getCoreConfig().getShardingTotalCount());
                 LiteJobConfiguration simpleJobRootConfig = LiteJobConfiguration.newBuilder(simpleJobConfig).build();
                 JobScheduler scheduler = new JobScheduler(zookeeperRegistryCenter, simpleJobRootConfig);
 
